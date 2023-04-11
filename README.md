@@ -30,6 +30,8 @@ I think I need to Observe property changes on the ObservableCollection but I can
 - 
 But I want to understand the most Idiomatic way to do this, but everything I'm trying to do seems to overcomplicate it.
 
+You can find the main heavy lifters in the only MVVM View Model [here](https://github.com/ProbablePrime/Repro-ReactiveUI-MVVM-Sum-Filter/blob/main/AvaloniaApplication6/ViewModels/MainWindowViewModel.cs)
+
 ![](https://i.probableprime.co.uk/230411-Mq5Zkl8eWq8AuLZFI2Bj.gif)
 
 
