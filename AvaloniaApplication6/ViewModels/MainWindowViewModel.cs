@@ -1,7 +1,12 @@
 ﻿using AvaloniaApplication6.Models;
+using DynamicData;
+using DynamicData.Aggregation;
+using DynamicData.Binding;
+using ReactiveUI.Fody.Helpers;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Linq;
 
 namespace AvaloniaApplication6.ViewModels
 {
@@ -9,10 +14,8 @@ namespace AvaloniaApplication6.ViewModels
     {
         public ObservableCollection<Record> Records { get; }
 
-        // How do I keep Total up to date with the correct value, In a reactive UI/MVVM way?
-        // This cannot be [Reactive]
-        // It has no setter, therefore it is not possible for the property to change, and thus should not be marked with[Reactive]
-        public int Total => Records.Where(r => r.ShouldBeIncluded).Select(r => r.Size).Sum();
+        [ObservableAsProperty]
+        public int Total { get; } = 0;
 
         public MainWindowViewModel()
         {
@@ -30,11 +33,13 @@ namespace AvaloniaApplication6.ViewModels
             Records[3].ShouldBeIncluded = true;
             Records[5].ShouldBeIncluded = true;
 
-            // Can this do it?
-            //records.ToObservableChangeSet(x => x.Id).Filter(x=> x.ShouldBeIncluded). What's next? Is this right?;
+            Records
+                .ToObservableChangeSet(x => x.Id)
+                .AutoRefresh(x => x.ShouldBeIncluded)
+                .Filter(x => x.ShouldBeIncluded)
+                .Sum(x => x.Size)
+                .ToPropertyEx(this, x => x.Total);
 
-            //What about?
-            // this.WhenAnyValue ?
         }
 
     }
